@@ -1,0 +1,8 @@
+app.wasm
+wasm_exec.js
+
+*
+!/**/
+!*.*
+
+/.vscode/
