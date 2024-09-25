@@ -1,7 +1,5 @@
-#fillable {
-    width: 200px;
-    height: 200px;
-    background-color: burlywood;
+* {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 img {

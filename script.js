@@ -7,7 +7,7 @@ async function handleFiles() {
         document.getElementById("sourceImage").src = URL.createObjectURL(new Blob([file]));
         const arrayBuffer = await file.arrayBuffer();
         const input = new Uint8Array(arrayBuffer);
-        const result = window.applySobel(input);
+        const result = window.applyGaussean(input);
         targetImage.src = URL.createObjectURL(new Blob([result]));
     }
 }

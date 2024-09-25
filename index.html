@@ -7,7 +7,12 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
         <input type="file" id="fileInput" accept="image/png" />
         <div>
-            <input type="radio" value="sobel">Sobel Filter</input>
+            <fieldset>
+                <input type="radio" id="radio-sobel" value="sobel" name="filter" />
+                <label for="radio-sobel">Sobel Filter</label>
+                <input type="radio" id="radio-gaussean" value="gaussean" name="filter" />
+                <label for="radio-gaussean">Gaussean Blur</label>
+            </fieldset>
         </div>
 
         <div id="outer-container">
