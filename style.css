@@ -18,10 +18,26 @@ img {
     object-fit: contain;
 }
 
-#outer-container {
+#image-container {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
     width: 100%;
     height: 1rem;
+}
+
+#filters {
+    margin-top: 20px;
+}
+
+#color-shift-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+    width: fit-content;
+    label {
+        margin-right: 15px;
+        margin-left: 5px;
+    }
 }
