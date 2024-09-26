@@ -7,15 +7,15 @@ import (
 	"syscall/js"
 )
 
-func applySobel(this js.Value, args []js.Value) any {
+func applySobel(this js.Value, args []js.Value) interface{} {
 	return applyImageOperator(this, args, "sobel")
 }
 
-func applyGaussean(this js.Value, args []js.Value) any {
+func applyGaussean(this js.Value, args []js.Value) interface{} {
 	return applyImageOperator(this, args, "gaussean")
 }
 
-func applyImageOperator(this js.Value, args []js.Value, operation string) any {
+func applyImageOperator(this js.Value, args []js.Value, operation string) interface{} {
 	inputBuffer := make([]byte, args[0].Get("byteLength").Int())
 	js.CopyBytesToGo(inputBuffer, args[0])
 	img, _, _ := image.Decode(bytes.NewReader(inputBuffer))
@@ -28,7 +28,7 @@ func applyImageOperator(this js.Value, args []js.Value, operation string) any {
 		break
 
 	case "gaussean":
-		resultImage = gaussianBlur(img, 5)
+		resultImage = applyGaussianBlur(img)
 
 	default:
 		panic("No valid operation given to execute")
