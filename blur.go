@@ -1,69 +1,71 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	_ "image/png"
-	"math"
 )
 
-var gaussKernel = [25]float64{
-	1, 4, 7, 4, 1,
-	4, 16, 26, 16, 4,
-	7, 26, 41, 26, 7,
-	4, 16, 26, 16, 4,
-	1, 4, 7, 4, 1,
+var gaussianKernel = [11][11]float64{
+	{0.0000, 0.0000, 0.0000, 0.0001, 0.0003, 0.0003, 0.0003, 0.0001, 0.0000, 0.0000, 0.0000},
+	{0.0000, 0.0001, 0.0003, 0.0009, 0.0018, 0.0022, 0.0018, 0.0009, 0.0003, 0.0001, 0.0000},
+	{0.0000, 0.0003, 0.0014, 0.0042, 0.0080, 0.0099, 0.0080, 0.0042, 0.0014, 0.0003, 0.0000},
+	{0.0001, 0.0009, 0.0042, 0.0123, 0.0234, 0.0290, 0.0234, 0.0123, 0.0042, 0.0009, 0.0001},
+	{0.0003, 0.0018, 0.0080, 0.0234, 0.0445, 0.0551, 0.0445, 0.0234, 0.0080, 0.0018, 0.0003},
+	{0.0003, 0.0022, 0.0099, 0.0290, 0.0551, 0.0682, 0.0551, 0.0290, 0.0099, 0.0022, 0.0003},
+	{0.0003, 0.0018, 0.0080, 0.0234, 0.0445, 0.0551, 0.0445, 0.0234, 0.0080, 0.0018, 0.0003},
+	{0.0001, 0.0009, 0.0042, 0.0123, 0.0234, 0.0290, 0.0234, 0.0123, 0.0042, 0.0009, 0.0001},
+	{0.0000, 0.0003, 0.0014, 0.0042, 0.0080, 0.0099, 0.0080, 0.0042, 0.0014, 0.0003, 0.0000},
+	{0.0000, 0.0001, 0.0003, 0.0009, 0.0018, 0.0022, 0.0018, 0.0009, 0.0003, 0.0001, 0.0000},
+	{0.0000, 0.0000, 0.0000, 0.0001, 0.0003, 0.0003, 0.0003, 0.0001, 0.0000, 0.0000, 0.0000},
 }
 
-// GaussianBlur applies a gaussian kernel filter on src and return a new blurred image.
-func gaussianBlur(src image.Image, ksize float64) *image.RGBA {
-	//ks := 5
+// applyGaussianBlur applies a 7x7 Gaussian blur to the given image
+func applyGaussianBlur(img image.Image) image.Image {
+	bounds := img.Bounds()
+	blurred := image.NewRGBA(bounds)
+	draw.Draw(blurred, bounds, img, bounds.Min, draw.Src)
 
-	// make sum of kernel be 1
-	//for i := 0; i < 25; i++ {
-	//	gaussKernel[i] *= 1 / 273
-	//}
+	kernelSize := len(gaussianKernel)
+	offset := kernelSize / 2
 
-	// kernel of gaussian 15x15
-	ks := int(ksize)
-	k := make([]float64, ks*ks)
-	for i := 0; i < ks; i++ {
-		for j := 0; j < ks; j++ {
-			k[i*ks+j] = math.Exp(-(math.Pow(float64(i)-ksize/2, 2)+math.Pow(float64(j)-ksize/2, 2))/(2*math.Pow(ksize/2, 2))) / 256
-		}
-	}
+	for x := bounds.Min.X + offset; x < bounds.Max.X-offset; x++ {
+		for y := bounds.Min.Y + offset; y < bounds.Max.Y-offset; y++ {
+			var r, g, b float64
 
-	var sum float64
-	for i := 0; i < len(k); i++ {
-		sum += k[i]
-	}
-	fmt.Println(sum, k)
+			// Convolve the pixel with the kernel
+			for i := 0; i < kernelSize; i++ {
+				for j := 0; j < kernelSize; j++ {
+					px := img.At(x-offset+i, y-offset+j)
+					rgba := color.RGBAModel.Convert(px).(color.RGBA)
+					weight := gaussianKernel[i][j]
 
-	// make an image that is ksize larger than the original
-	dst := image.NewRGBA(src.Bounds())
-
-	// apply
-	for y := src.Bounds().Min.Y; y < src.Bounds().Max.Y; y++ {
-		for x := src.Bounds().Min.X; x < src.Bounds().Max.X; x++ {
-			var r, g, b, a float64
-			for ky := 0; ky < ks; ky++ {
-				for kx := 0; kx < ks; kx++ {
-					// get the source pixel
-					c := src.At(x+kx-ks/2, y+ky-ks/2)
-					r1, g1, b1, a1 := c.RGBA()
-					// get the kernel value
-					k := k[ky*ks+kx]
-					// accumulate
-					r += float64(r1) * k
-					g += float64(g1) * k
-					b += float64(b1) * k
-					a += float64(a1) * k
+					r += float64(rgba.R) * weight
+					g += float64(rgba.G) * weight
+					b += float64(rgba.B) * weight
 				}
 			}
-			// set the destination pixel
-			dst.Set(x, y, color.RGBA{R: uint8(r / 273), G: uint8(g / 273), B: uint8(b / 273), A: uint8(a / 273)})
+
+			// Set the new pixel in the blurred image
+			blurred.Set(x, y, color.RGBA{
+				R: uint8(clamp(r, 0, 255)),
+				G: uint8(clamp(g, 0, 255)),
+				B: uint8(clamp(b, 0, 255)),
+				A: 255, // Set alpha to fully opaque
+			})
 		}
 	}
-	return dst
+
+	return blurred
+}
+
+// clamp ensures a value is within a given range
+func clamp(value, min, max float64) float64 {
+	if value < min {
+		return min
+	} else if value > max {
+		return max
+	}
+	return value
 }
