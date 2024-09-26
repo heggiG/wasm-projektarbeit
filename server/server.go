@@ -7,7 +7,7 @@ import (
 
 const (
 	addr = "localhost:8008"
-	dir  = "."
+	dir  = ""
 )
 
 func main() {
