@@ -1,5 +1,7 @@
 const fileInput = document.getElementById("file-input");
-const filterPicker = document.getElementById("filter-picker")
+const filterPicker = document.getElementById("filter-picker");
+const colorPicker = document.getElementById("color-shift-color");
+const shiftAmount = document.getElementById("shift-amount");
 fileInput.addEventListener("change", handleFiles);
 
 let inputFile;
@@ -21,6 +23,10 @@ document.getElementById("apply-button").addEventListener('click', async () => {
             break;
         case "gaussean":
             result = await window.applyGaussean(inputFile);
+            break;
+        case "shift":
+            result = await window.applyShift(inputFile, colorPicker.value, +shiftAmount.value)
+            // console.log(shiftAmount.value)
             break;
     }
     targetImage.src = URL.createObjectURL(new Blob([result]));
