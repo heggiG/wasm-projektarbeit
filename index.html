@@ -8,20 +8,20 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
         <h1>Picture Filters in WASM with GO</h1>
         <input type="file" id="file-input" accept="image/png" />
-        <div>
+        <div id="filters">
             <form id="filter-picker">
                 <input type="radio" id="radio-sobel" value="sobel" name="filter" checked />
                 <label for="radio-sobel">Sobel Filter</label>
                 <input type="radio" id="radio-gaussean" value="gaussean" name="filter" />
                 <label for="radio-gaussean">Gaussean Blur</label>
-                <div id="shift-container">
+                <fieldset id="color-shift-container">
                     <input type="radio" id="radio-color-shift" value="shift" name="filter" />
                     <label for="radio-color-shift">Color Shift</label>
                     <input type="color" id="color-shift-color" />
                     <label for="color-shift-color">Pick a color</label>
                     <input type="range" min="0" max="1" step="0.0001" id="shift-amount" />
                     <label for="shift-amount">Shift amount</label>
-                </div>
+                </fieldset>
                 <div id="vignette-container">
                     <input type="radio" id="radio-vignette" value="vignette" name="filter">
                     <label for="radio-vignette">Vignette</label>
@@ -37,7 +37,7 @@
             <button id="apply-button">Apply</button>
         </div>
 
-        <div id="outer-container">
+        <div id="image-container">
             <img id="sourceImage" class="images" />
             <img id="targetImage" class="images" />
         </div>
