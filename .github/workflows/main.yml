@@ -1,0 +1,19 @@
+name: Build
+run-name: Building go WASM
+on: [push]
+jobs:
+  CompileWasm:
+    name: Compile Wasm
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Setup Go environment
+      uses: actions/setup-go@v5.0.2
+    - name: compile go
+      run: GOOS=js GOARCH=wasm go build -o app.wasm *.go
+    - name: Copy wasm_exec.js
+      run: cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" wasm_exec.js
+    - name: ls
+      run: ls ${{ github.workspace }}
+
+  
