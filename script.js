@@ -1,7 +1,15 @@
 const fileInput = document.getElementById("file-input");
+
 const filterPicker = document.getElementById("filter-picker");
+
 const colorPicker = document.getElementById("color-shift-color");
 const shiftAmount = document.getElementById("shift-amount");
+
+const vignetteCenterX = document.getElementById("vignette-center-x");
+const vignetteCenterY = document.getElementById("vignette-center-y");
+const vignetteStrength = document.getElementById("vignette-strength");
+const vignetteRadius = document.getElementById("vignette-radius");
+
 fileInput.addEventListener("change", handleFiles);
 
 let inputFile;
@@ -15,19 +23,21 @@ async function handleFiles() {
     }
 }
 
-document.getElementById("apply-button").addEventListener('click', async () => {
+document.getElementById("apply-button").addEventListener('click', () => {
     let result;
     switch (filterPicker.elements['filter'].value) {
         case "sobel":
-            result = await window.applySobel(inputFile);
+            result = window.applySobel(inputFile);
             break;
         case "gaussean":
-            result = await window.applyGaussean(inputFile);
+            result = window.applyGaussean(inputFile);
             break;
         case "shift":
-            result = await window.applyShift(inputFile, colorPicker.value, +shiftAmount.value)
-            // console.log(shiftAmount.value)
+            result = window.applyShift(inputFile, colorPicker.value, +shiftAmount.value)
+            break;
+        case "vignette":
+            result = window.applyVignette(inputFile, +vignetteRadius.value, +vignetteCenterX.value, +vignetteCenterY.value, +vignetteStrength.value)
             break;
     }
-    targetImage.src = URL.createObjectURL(new Blob([result]));
+    document.getElementById("targetImage").src = URL.createObjectURL(new Blob([result]));
 });
