@@ -15,7 +15,7 @@ func blendColor(srcColor, targetColor color.Color, blendFactor float64) color.Co
 	b := uint8(float64(b1>>8)*(1-blendFactor) + float64(b2>>8)*blendFactor)
 	a := uint8(float64(a1>>8)*(1-blendFactor) + float64(a2>>8)*blendFactor)
 
-	return color.RGBA{r, g, b, a}
+	return color.RGBA{R: r, G: g, B: b, A: a}
 }
 
 func colorShift(img image.Image, targetColor color.Color, blendFactor float64) image.Image {

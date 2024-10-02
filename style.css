@@ -12,17 +12,16 @@ h1 {
 }
 
 img {
-    width: 47%;
+    width: 43%;
     aspect-ratio: 1/1;
-    height: auto;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 #image-container {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     width: 100%;
     height: auto;
 }
