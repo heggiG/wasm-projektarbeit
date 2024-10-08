@@ -55,7 +55,7 @@ document.getElementById("apply-button").addEventListener('click', () => {
             result = window.applySobel(inputFile);
             break;
         case "gaussean":
-            result = window.applyGaussean(inputFile);
+            result = window.applyGaussian(inputFile);
             break;
         case "shift":
             result = window.applyShift(inputFile, colorPicker.value, +shiftAmount.value)

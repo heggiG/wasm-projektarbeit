@@ -8,8 +8,8 @@ WebAssembly ist kompilierter Byte Code der direkt vom Browser ausgeführt werden
 Dadurch können C, C++ und ähnliche low-level Sprachen* im Web verwendet werden.
 
 Moderne Browser bieten eine API mit der WebAssembly und JavaScript Code interagieren können, dadurch
-kann man (hier zum Beispiel in Go) in der ausgewählten Sprache direkt mit dem Dom interargieren,
-aufrufbare JavaScript methoden erzeugen und alles andere machen was auch in JavaScript möglich ist.
+kann man (hier zum Beispiel in Go) in der ausgewählten Sprache direkt mit dem Dom interagieren,
+aufrufbare JavaScript methoden erzeugen und alles andere machen, was auch in JavaScript möglich ist.
 
 \* Programmiersprachen mit einem garbage-collected Speichermodell sind ein [Langzeitziel](https://webassembly.org/docs/high-level-goals/) des WASM Projekts
 

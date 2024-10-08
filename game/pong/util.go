@@ -5,7 +5,6 @@ import (
 	"image/color"
 )
 
-// Position is a set of coordinates in 2-D plan
 type Position struct {
 	X, Y float32
 }
@@ -33,5 +32,5 @@ const (
 
 var (
 	BgColor  = color.Black
-	ObjColor = color.RGBA{120, 226, 160, 255}
+	ObjColor = color.RGBA{R: 120, G: 226, B: 160, A: 255}
 )

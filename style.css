@@ -45,3 +45,8 @@ img {
         margin-left: 5px;
     }
 }
+
+iframe {
+    align-self: center;
+    margin-top: 30px;
+}

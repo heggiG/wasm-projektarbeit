@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// Paddle is a pong paddle
+// Paddle is a game paddle
 type Paddle struct {
 	Position
 	Score        int
@@ -72,7 +72,6 @@ func (p *Paddle) Update(screen *ebiten.Image) {
 }
 
 func (p *Paddle) AiUpdate(b *Ball) {
-	// unbeatable haha
 	p.Y = b.Y
 }
 
@@ -80,8 +79,8 @@ func (p *Paddle) Draw(screen *ebiten.Image, scoreFont font.Face, ai bool) {
 	// draw player's paddle
 	pOpts := &ebiten.DrawImageOptions{}
 	pOpts.GeoM.Translate(float64(p.X), float64(p.Y-float32(p.Height/2)))
-	p.Img.Fill(p.Color)
-	screen.DrawImage(p.Img, pOpts)
+	_ = p.Img.Fill(p.Color)
+	_ = screen.DrawImage(p.Img, pOpts)
 
 	// draw player's score if needed
 	if !ai {

@@ -1,5 +1,5 @@
-<!--<!DOCTYPE html>-->
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>WASM Picture Filters</title>
@@ -26,11 +26,8 @@
                     <input type="radio" id="radio-vignette" value="vignette" name="filter">
                     <label for="radio-vignette">Vignette</label>
                     <input type="number" id="vignette-radius" placeholder="Radius"/>
-
                     <input type="number" id="vignette-center-x" placeholder="Center X"/>
-
                     <input type="number" id="vignette-center-y" placeholder="Center Y"/>
-
                     <input type="number" id="vignette-strength" placeholder="Strength"/>
                 </div>
             </form>
@@ -38,9 +35,10 @@
         </div>
 
         <div id="image-container">
-            <img id="source-image" class="images" ismap />
+            <img id="source-image" class="images" />
             <img id="target-image" class="images" />
         </div>
+        <iframe src="./game/index.html" id="game-frame" width="1200" height="900"></iframe>
         <script src="wasm_exec.js"></script>
         <script src="script.js"></script>
         <script>

@@ -40,12 +40,14 @@ func InitFonts() {
 
 func DrawCaption(state GameState, color color.Color, screen *ebiten.Image) {
 	w, h := screen.Size()
-	msg := []string{}
+	var msg []string
 	switch state {
 	case PlayState, InterState, PauseState:
 		msg = append(msg, "Press SPACE key to take a break (not too long though)")
 	case ControlsState:
 		msg = append(msg, "Press SPACE to go back to main menu")
+	default:
+		panic("unhandled default case")
 	}
 	for i, l := range msg {
 		x := (w - len(l)*smallFontSize) / 2
@@ -98,6 +100,8 @@ func DrawBigText(state GameState, color color.Color, screen *ebiten.Image) {
 			"GAME OVER!",
 			"SPACE -> RESET",
 		}
+	default:
+		panic("unhandled default case")
 	}
 	for i, l := range texts {
 		x := (w - len(l)*fontSize) / 2
