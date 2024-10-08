@@ -47,7 +47,7 @@ func DrawCaption(state GameState, color color.Color, screen *ebiten.Image) {
 	case ControlsState:
 		msg = append(msg, "Press SPACE to go back to main menu")
 	default:
-		panic("unhandled default case")
+		// noop
 	}
 	for i, l := range msg {
 		x := (w - len(l)*smallFontSize) / 2
@@ -101,7 +101,7 @@ func DrawBigText(state GameState, color color.Color, screen *ebiten.Image) {
 			"SPACE -> RESET",
 		}
 	default:
-		panic("unhandled default case")
+		// noop
 	}
 	for i, l := range texts {
 		x := (w - len(l)*fontSize) / 2
