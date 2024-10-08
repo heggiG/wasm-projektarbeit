@@ -36,11 +36,11 @@ jobs:
         uses: actions/setup-go@v5.0.2
       - name: compile filters module
         run:  |
-          ls
-          GOOS=js GOARCH=wasm go build -o app.wasm ./filtering/.
+          cd filtering
+          GOOS=js GOARCH=wasm go build -o ../app.wasm .
       - name: compile game module
         run: |
-          cd game
+          cd ../game
           GOOS=js GOARCH=wasm go build -o pong.wasm .
       - name: Setup Pages
         uses: actions/configure-pages@v5
