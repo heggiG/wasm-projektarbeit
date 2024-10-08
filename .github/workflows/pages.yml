@@ -35,7 +35,7 @@ jobs:
       - name: Setup Go environment
         uses: actions/setup-go@v5.0.2
       - name: compile filters module
-        run:  GOOS=js GOARCH=wasm go build -o app.wasm ./filtering
+        run:  GOOS=js GOARCH=wasm go build -o app.wasm ./filtering/.
       - name: compile game module
         run: |
           cd game
