@@ -6,13 +6,14 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 	"github.com/hajimehoshi/ebiten/inpututil"
+	"log"
 	"runtime"
 )
 
 // Game is the structure of the game state
 type Game struct {
 	state    pong.GameState
-	aiMode   bool
+	cpuMode  bool
 	ball     *pong.Ball
 	player1  *pong.Paddle
 	player2  *pong.Paddle
@@ -28,6 +29,7 @@ const (
 	speedIncrement   = 0.5
 )
 
+// Height of the game in pixels, not height of its window
 const (
 	windowWidth  = 800
 	windowHeight = 600
@@ -42,7 +44,7 @@ func NewGame(aiMode bool) *Game {
 
 func (g *Game) init(aiMode bool) {
 	g.state = pong.StartState
-	g.aiMode = aiMode
+	g.cpuMode = aiMode
 	if aiMode {
 		g.maxScore = 100
 	} else {
@@ -108,79 +110,29 @@ func (g *Game) reset(screen *ebiten.Image, state pong.GameState) {
 	g.ball.YVelocity = initBallVelocity
 }
 
-// Update updates the game state
+// Update updates the game state based on player input and game logic.
 func (g *Game) Update(screen *ebiten.Image) error {
 	switch g.state {
+	// if game is in start state check for key press and start the corresponding game or quit it
 	case pong.StartState:
 		if inpututil.IsKeyJustPressed(ebiten.KeyC) {
 			g.state = pong.ControlsState
 		} else if inpututil.IsKeyJustPressed(ebiten.KeyA) {
-			g.aiMode = true
+			g.cpuMode = true
 			g.state = pong.PlayState
 		} else if inpututil.IsKeyJustPressed(ebiten.KeyV) {
-			g.aiMode = false
+			g.cpuMode = false
 			g.state = pong.PlayState
 		}
 
+	// If game is in control state, pressing space will return to the main menu
 	case pong.ControlsState:
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 			g.state = pong.StartState
 		}
+
+	// In play state, main game loop
 	case pong.PlayState:
-		w, _ := screen.Size()
-
-		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-			g.state = pong.PauseState
-			break
-		}
-
-		g.player1.Update(screen)
-		if g.aiMode {
-			g.player2.AiUpdate(g.ball)
-		} else {
-			g.player2.Update(screen)
-		}
-
-		xV := g.ball.XVelocity
-		g.ball.Update(g.player1, g.player2, screen)
-		// rally count
-		if xV*g.ball.XVelocity < 0 {
-			// score up when ball touches human player's paddle
-			if g.aiMode && g.ball.X < float32(w/2) {
-				g.player1.Score++
-			}
-
-			g.rally++
-
-			// spice things up
-			if (g.rally)%speedUpdateCount == 0 {
-				g.level++
-				g.ball.XVelocity += speedIncrement
-				g.ball.YVelocity += speedIncrement
-				g.player1.Speed += speedIncrement
-				g.player2.Speed += speedIncrement
-			}
-		}
-
-		if g.ball.X < 0 {
-			g.player2.Score++
-			if g.aiMode {
-				g.state = pong.GameOverState
-				break
-			}
-			g.reset(screen, pong.InterState)
-		} else if g.ball.X > float32(w) {
-			g.player1.Score++
-			if g.aiMode {
-				g.state = pong.GameOverState
-				break
-			}
-			g.reset(screen, pong.InterState)
-		}
-
-		if g.player1.Score == g.maxScore || g.player2.Score == g.maxScore {
-			g.state = pong.GameOverState
-		}
 
 	case pong.InterState, pong.PauseState:
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
@@ -195,7 +147,69 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		}
 	}
 
-	g.Draw(screen)
+	err := g.Draw(screen)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
+}
+
+func (g *Game) Play(screen *ebiten.Image) error {
+	w, _ := screen.Size()
+
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		g.state = pong.PauseState
+		return nil
+	}
+
+	g.player1.Update(screen)
+	if g.cpuMode {
+		g.player2.AiUpdate(g.ball)
+	} else {
+		g.player2.Update(screen)
+	}
+
+	xV := g.ball.XVelocity
+	g.ball.Update(g.player1, g.player2, screen)
+	// rally count
+	if xV*g.ball.XVelocity < 0 {
+		// score up when ball touches human player's paddle
+		if g.cpuMode && g.ball.X < float32(w/2) {
+			g.player1.Score++
+		}
+
+		g.rally++
+
+		// spice things up
+		if (g.rally)%speedUpdateCount == 0 {
+			g.level++
+			g.ball.XVelocity += speedIncrement
+			g.ball.YVelocity += speedIncrement
+			g.player1.Speed += speedIncrement
+			g.player2.Speed += speedIncrement
+		}
+	}
+
+	if g.ball.X < 0 {
+		g.player2.Score++
+		if g.cpuMode {
+			g.state = pong.GameOverState
+			return nil
+		}
+		g.reset(screen, pong.InterState)
+	} else if g.ball.X > float32(w) {
+		g.player1.Score++
+		if g.cpuMode {
+			g.state = pong.GameOverState
+			return nil
+		}
+		g.reset(screen, pong.InterState)
+	}
+
+	if g.player1.Score == g.maxScore || g.player2.Score == g.maxScore {
+		g.state = pong.GameOverState
+	}
 
 	return nil
 }
@@ -209,7 +223,7 @@ func (g *Game) Draw(screen *ebiten.Image) error {
 
 	if g.state != pong.ControlsState {
 		g.player1.Draw(screen, pong.ArcadeFont, false)
-		g.player2.Draw(screen, pong.ArcadeFont, g.aiMode)
+		g.player2.Draw(screen, pong.ArcadeFont, g.cpuMode)
 		g.ball.Draw(screen)
 	}
 

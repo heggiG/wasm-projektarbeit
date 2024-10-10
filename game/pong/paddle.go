@@ -9,7 +9,8 @@ import (
 	"strconv"
 )
 
-// Paddle is a game paddle
+// Paddle represents one of the paddles used in the game
+// and therefore one of the players, whether cpu or real
 type Paddle struct {
 	Position
 	Score        int
@@ -20,8 +21,8 @@ type Paddle struct {
 	Up           ebiten.Key
 	Down         ebiten.Key
 	Img          *ebiten.Image
-	pressed      keysPressed
-	scorePrinted scorePrinted
+	pressed      KeysPressed
+	scorePrinted ScorePrinted
 }
 
 const (
@@ -30,12 +31,12 @@ const (
 	InitPaddleShift  = 50
 )
 
-type keysPressed struct {
+type KeysPressed struct {
 	up   bool
 	down bool
 }
 
-type scorePrinted struct {
+type ScorePrinted struct {
 	score   int
 	printed bool
 	x       int
@@ -75,15 +76,15 @@ func (p *Paddle) AiUpdate(b *Ball) {
 	p.Y = b.Y
 }
 
-func (p *Paddle) Draw(screen *ebiten.Image, scoreFont font.Face, ai bool) {
+func (p *Paddle) Draw(screen *ebiten.Image, scoreFont font.Face, cpu bool) {
 	// draw player's paddle
 	pOpts := &ebiten.DrawImageOptions{}
 	pOpts.GeoM.Translate(float64(p.X), float64(p.Y-float32(p.Height/2)))
 	_ = p.Img.Fill(p.Color)
 	_ = screen.DrawImage(p.Img, pOpts)
 
-	// draw player's score if needed
-	if !ai {
+	// draw player's score if needed, can't win in cpu mode anyway
+	if !cpu {
 		if p.scorePrinted.score != p.Score && p.scorePrinted.printed {
 			p.scorePrinted.printed = false
 		}

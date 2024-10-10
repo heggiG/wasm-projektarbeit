@@ -5,7 +5,7 @@ import (
 	"image/color"
 )
 
-// Ball is a game ball
+// Ball is the ball shown in the game
 type Ball struct {
 	Position
 	Radius    float32
@@ -19,7 +19,8 @@ const (
 	InitBallRadius = 10.0
 )
 
-func setBallPixels(c color.Color, ballImg *ebiten.Image) {
+// SetBallPixels fills the ball with a solid color
+func SetBallPixels(c color.Color, ballImg *ebiten.Image) {
 	err := ballImg.Fill(c)
 	if err != nil {
 		panic(err)
@@ -57,7 +58,7 @@ func (ball *Ball) Update(leftPaddle *Paddle, rightPaddle *Paddle, screen *ebiten
 func (ball *Ball) Draw(screen *ebiten.Image) {
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(float64(ball.X), float64(ball.Y))
-	setBallPixels(ball.Color, ball.Img)
+	SetBallPixels(ball.Color, ball.Img)
 	err := screen.DrawImage(ball.Img, opts)
 	if err != nil {
 		panic(err)

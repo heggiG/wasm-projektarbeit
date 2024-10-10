@@ -1,6 +1,6 @@
 # GO WebAssembly
 
-[Die neueste Version auf github pages anaschauen.](https://heggig.github.io/wasm-projektarbeit/)
+[Die neueste Version auf github pages anschauen.](https://heggig.github.io/wasm-projektarbeit/)
 
 # Wie funktioniert WebAssembly
 
@@ -29,3 +29,9 @@ Im Fall von Go kann die Datei entweder aus dem `GOHOME` Verzeichnis kopiert werd
 werden (https://github.com/golang/go/blob/master/lib/wasm/wasm_exec.js). Dieses 
 Skript erzeugt eine globale Go-Klasse, die die Interaktion mit der WebAssembly API wrapped.
 
+# Was wurde in diesem Repo implementiert?
+
+In diesem Repo sind zwei verschiedene Themen in WebAssembly implementiert, einmal kann man
+ein Bild (png) laden und dann einen von 4 verschiedenen "Filtern" anwenden (Sobel Filter, 
+Gausssches Weichzeichnen, Farbshift und Vignetten) und als zweites befindet sich unten auf der
+Seite ein in Go implementiertes Pong Spiel.

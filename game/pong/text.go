@@ -20,6 +20,7 @@ var (
 	SmallArcadeFont font.Face
 )
 
+// InitFonts initiales the font used in the game
 func InitFonts() {
 	tt, err := truetype.Parse(fonts.ArcadeN_ttf)
 	if err != nil {
@@ -38,6 +39,7 @@ func InitFonts() {
 	})
 }
 
+// DrawCaption draws the smaller text at the bottom of the screen
 func DrawCaption(state GameState, color color.Color, screen *ebiten.Image) {
 	w, h := screen.Size()
 	var msg []string
@@ -55,6 +57,7 @@ func DrawCaption(state GameState, color color.Color, screen *ebiten.Image) {
 	}
 }
 
+// DrawBigText shows large text on the, depending on game state
 func DrawBigText(state GameState, color color.Color, screen *ebiten.Image) {
 	w, _ := screen.Size()
 	var texts []string
@@ -66,7 +69,7 @@ func DrawBigText(state GameState, color color.Color, screen *ebiten.Image) {
 			"",
 			"C -> CONTROLS",
 			"V -> VS GAME",
-			"A -> AI GAME",
+			"A -> CPU GAME",
 		}
 	case ControlsState:
 		texts = []string{
@@ -79,17 +82,17 @@ func DrawBigText(state GameState, color color.Color, screen *ebiten.Image) {
 			"O -> UP",
 			"K -> DOWN",
 		}
-	case InterState:
-		texts = []string{
-			"",
-			"",
-			"SPACE -> RESUME",
-			"R     -> RESET",
-		}
 	case PauseState:
 		texts = []string{
 			"",
 			"PAUSED",
+			"",
+			"SPACE -> RESUME",
+			"R     -> RESET",
+		}
+	case InterState:
+		texts = []string{
+			"",
 			"",
 			"SPACE -> RESUME",
 			"R     -> RESET",

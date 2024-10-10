@@ -14,6 +14,10 @@ const vignetteRadius = document.getElementById("vignette-radius");
 
 fileInput.addEventListener("change", handleFiles);
 
+/**
+ * Function to map clicks on the input image (which is shown cropped to a square) to coordinates on
+ * the uncropped image.
+ */
 srcImage.addEventListener('click', function (event) {
     let woh = imgDimensions.x > imgDimensions.y ? imgDimensions.y : imgDimensions.x
     let bounds= this.getBoundingClientRect();
@@ -45,6 +49,7 @@ async function handleFiles() {
         const img = new Image();
         img.src = url;
         imgDimensions =  {x: img.width, y: img.height};
+        fileInput.disabled = false;
     }
 }
 
