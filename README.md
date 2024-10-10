@@ -93,7 +93,8 @@ Der Ball bewegt sich in einer geraden Linie über den Bildschirm und ändert sei
 er einen Schläger oder die Ober- und Unterkante des Spielfelds berührt. Wenn ein Spieler den
 Ball verfehlt, erzielt der andere einen Punkt.
 
-Dieses Spiel ist eigentlich eine Vollbildanwendung
+Dieses Spiel ist eigentlich eine Vollbildanwendung und wird dann als iframe in html eingebettet, dies
+vereinfacht einiges was einiges in bezug auf Größenberechnung des Spiels vereinfacht.
 
 ## WASM Interaktion
 
