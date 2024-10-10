@@ -40,7 +40,6 @@ jobs:
           GOOS=js GOARCH=wasm go build -o ../app.wasm .
       - name: compile game module
         run: |
-          ls
           cd game
           GOOS=js GOARCH=wasm go build -o pong.wasm .
       - name: Setup Pages

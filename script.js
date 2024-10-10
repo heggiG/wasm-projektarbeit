@@ -49,7 +49,7 @@ async function handleFiles() {
         const img = new Image();
         img.src = url;
         imgDimensions =  {x: img.width, y: img.height};
-        fileInput.disabled = false;
+        document.getElementById("apply-button").disabled = false;
     }
 }
 
