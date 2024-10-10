@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 	"github.com/hajimehoshi/ebiten/inpututil"
 	"log"
-	"runtime"
 )
 
 // Game is the structure of the game state
@@ -155,7 +154,8 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	return nil
 }
 
-func (g *Game) Play(screen *ebiten.Image) error {
+// play is the game loop when in the playing state of the game
+func (g *Game) play(screen *ebiten.Image) error {
 	w, _ := screen.Size()
 
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
@@ -227,7 +227,8 @@ func (g *Game) Draw(screen *ebiten.Image) error {
 		g.ball.Draw(screen)
 	}
 
-	_ = ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
+	// print the frames per second at the top left
+	_ = ebitenutil.DebugPrint(screen, fmt.Sprintf("FPS: %0.2f", ebiten.CurrentFPS()))
 
 	return nil
 }
@@ -238,9 +239,8 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func main() {
-	if runtime.GOARCH == "js" || runtime.GOOS == "js" {
-		ebiten.SetFullscreen(true)
-	}
+	// set the games window to fullscreen, makes it very easy to embed the game in an iframe
+	ebiten.SetFullscreen(true)
 	g := NewGame(true)
 	if err := ebiten.RunGame(g); err != nil {
 		panic(err)

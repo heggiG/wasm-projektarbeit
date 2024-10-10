@@ -92,3 +92,11 @@ zu schlagen, dass der Gegner ihn nicht zurückspielen kann.
 Der Ball bewegt sich in einer geraden Linie über den Bildschirm und ändert seine Richtung, sobald 
 er einen Schläger oder die Ober- und Unterkante des Spielfelds berührt. Wenn ein Spieler den
 Ball verfehlt, erzielt der andere einen Punkt.
+
+Dieses Spiel ist eigentlich eine Vollbildanwendung
+
+## WASM Interaktion
+
+Diese zwei Teile zeigen zwei unterschiedliche Wege, um WASM zu benutzen. Einmal zeigt das Bild Filtern
+wie man Go Methoden in JavaScript aufruft und Rückgabewerte behandelt und verarbeitet, zum anderen wie man
+Vollbild Anwendungen per WASM im Web verwenden kann.

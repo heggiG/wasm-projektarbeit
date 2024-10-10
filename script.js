@@ -39,6 +39,9 @@ srcImage.addEventListener('click', function (event) {
 let inputFile;
 let imgDimensions;
 
+/**
+ * Handles the input of a file, sets it as the left <img> elements source.
+ */
 async function handleFiles() {
     if (this.files.length) {
         const file = this.files[0];
@@ -53,20 +56,23 @@ async function handleFiles() {
     }
 }
 
+/**
+ * Event listener that calls the methods set in the dom by wasm, then sets the image as the output file
+ */
 document.getElementById("apply-button").addEventListener('click', () => {
     let result;
     switch (filterPicker.elements['filter'].value) {
         case "sobel":
-            result = window.applySobel(inputFile);
+            result = window["applySobel"](inputFile);
             break;
-        case "gaussean":
-            result = window.applyGaussian(inputFile);
+        case "gaussian":
+            result = window["applyGaussian"](inputFile);
             break;
         case "shift":
-            result = window.applyShift(inputFile, colorPicker.value, +shiftAmount.value)
+            result = window["applyShift"](inputFile, colorPicker.value, +shiftAmount.value)
             break;
         case "vignette":
-            result = window.applyVignette(inputFile, +vignetteRadius.value, +vignetteCenterX.value, +vignetteCenterY.value, +vignetteStrength.value)
+            result = window["applyVignette"](inputFile, +vignetteRadius.value, +vignetteCenterX.value, +vignetteCenterY.value, +vignetteStrength.value)
             break;
     }
     document.getElementById("target-image").src = URL.createObjectURL(new Blob([result]));

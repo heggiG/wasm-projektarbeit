@@ -85,6 +85,7 @@ func ApplyImageOperator(this js.Value, args []js.Value, operation string) interf
 	return result
 }
 
+// The main method calls js to globally set the functions written in go as javascript methods so they can be called from the dom.
 func main() {
 	js.Global().Set("applySobel", js.FuncOf(ApplySobel))
 	js.Global().Set("applyGaussian", js.FuncOf(ApplyGaussian))
