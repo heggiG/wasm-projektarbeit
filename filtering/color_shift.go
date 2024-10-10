@@ -18,6 +18,7 @@ func blendColor(srcColor, targetColor color.Color, blendFactor float64) color.Co
 	return color.RGBA{R: r, G: g, B: b, A: a}
 }
 
+// colorShift applies blendColor to the whole image
 func colorShift(img image.Image, targetColor color.Color, blendFactor float64) image.Image {
 	bounds := img.Bounds()
 	newImg := image.NewRGBA(bounds)

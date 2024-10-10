@@ -6,13 +6,15 @@ import (
 	"math"
 )
 
+// sobel applies a sobel filter to a whole image
 // The returned image has its size reduced by 2 in both dimensions.
 func sobel(rgba image.Image) image.Image {
 	grayImage := toGrayImage(rgba)
-	convolved, min, max := sobelGray(grayImage)
-	return toRGBAImage(convolved, min, max)
+	convolved, low, high := sobelGray(grayImage)
+	return toRGBAImage(convolved, low, high)
 }
 
+// toGrayImage turns an image gray
 func toGrayImage(img image.Image) *image.Gray {
 	grayImage := image.NewGray(img.Bounds())
 	for y := img.Bounds().Min.Y; y < img.Bounds().Max.Y; y++ {
@@ -26,42 +28,47 @@ func toGrayImage(img image.Image) *image.Gray {
 
 type kernel [9]int
 
+// get small helper function to turn x-y coordinates into singular array access
 func (k kernel) get(x, y int) int {
 	return k[y*3+x]
 }
 
+// kernel for the vertical edge detection
 var kernelX = kernel{
 	1, 0, -1,
 	2, 0, -2,
 	1, 0, -1,
 }
 
+// kernel for the horizontal edge detection
 var kernelY = kernel{
 	1, 2, 1,
 	0, 0, 0,
 	-1, -2, -1,
 }
 
+// sobelGray applies the filtering to the whole image
 func sobelGray(grayImage *image.Gray) (*image.Gray16, uint16, uint16) {
 	width := grayImage.Bounds().Dx() - 2
 	height := grayImage.Bounds().Dy() - 2
 	convolved := image.NewGray16(image.Rect(0, 0, width, height))
-	min, max := uint16(math.MaxUint16), uint16(0)
+	low, high := uint16(math.MaxUint16), uint16(0)
 	for y := 1; y < grayImage.Bounds().Max.Y-1; y++ {
 		for x := 1; x < grayImage.Bounds().Max.X-1; x++ {
 			value := convolvePixel(grayImage, x, y)
-			if min > value {
-				min = value
+			if low > value {
+				low = value
 			}
-			if max < value {
-				max = value
+			if high < value {
+				high = value
 			}
 			convolved.SetGray16(x-1, y-1, color.Gray16{Y: value})
 		}
 	}
-	return convolved, min, max
+	return convolved, low, high
 }
 
+// convolvePixel convolves a single pixel using both the x and y kernels
 func convolvePixel(img *image.Gray, x, y int) uint16 {
 	var valueX int
 	var valueY int
@@ -75,6 +82,7 @@ func convolvePixel(img *image.Gray, x, y int) uint16 {
 	return uint16(math.Sqrt(float64(valueX*valueX + valueY*valueY)))
 }
 
+// toRGBAImage turns the image.Gray back into an image.RGBA
 func toRGBAImage(img *image.Gray16, min uint16, max uint16) *image.RGBA {
 	result := image.NewRGBA(img.Bounds())
 	valueRange := float64(max - min)
