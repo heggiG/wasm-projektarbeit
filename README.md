@@ -1,6 +1,6 @@
 # GO WebAssembly
 
-[Die neueste Version auf github pages anschauen.](https://heggig.github.io/wasm-projektarbeit/)
+[Die neueste Version auf github pages anschauen.](https://heggig.github.io/wasm-projektarbeit/) (funktioniert am besten in Chrome)
 
 # Wie funktioniert WebAssembly
 
