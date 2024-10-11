@@ -5,13 +5,11 @@
 # Wie funktioniert WebAssembly
 
 WebAssembly ist kompilierter Byte Code der direkt vom Browser ausgeführt werden kann.
-Dadurch können C, C++ und ähnliche low-level Sprachen* im Web verwendet werden.
+Dadurch können C, C++ und ähnliche low-level Sprachen im Web verwendet werden.
 
 Moderne Browser bieten eine API mit der WebAssembly und JavaScript Code interagieren können, dadurch
 kann man (hier zum Beispiel in Go) in der ausgewählten Sprache direkt mit dem Dom interagieren,
 aufrufbare JavaScript methoden erzeugen und alles andere machen, was auch in JavaScript möglich ist.
-
-\* Programmiersprachen mit einem garbage-collected Speichermodell sind ein [Langzeitziel](https://webassembly.org/docs/high-level-goals/) des WASM Projekts
 
 ## Go Code im Browser verwenden
 
@@ -93,11 +91,24 @@ Der Ball bewegt sich in einer geraden Linie über den Bildschirm und ändert sei
 er einen Schläger oder die Ober- und Unterkante des Spielfelds berührt. Wenn ein Spieler den
 Ball verfehlt, erzielt der andere einen Punkt.
 
-Dieses Spiel ist eigentlich eine Vollbildanwendung und wird dann als iframe in html eingebettet, dies
-vereinfacht einiges was einiges in bezug auf Größenberechnung des Spiels vereinfacht.
+Dieses Spiel ist eigentlich eine Vollbildanwendung und wird dann als iframe in HTML eingebettet.
+Dies vereinfacht die Darstellung auf der Seite, da die Größe des iframes die Größe des Spiels
+angibt.
 
 ## WASM Interaktion
 
 Diese zwei Teile zeigen zwei unterschiedliche Wege, um WASM zu benutzen. Einmal zeigt das Bild Filtern
 wie man Go Methoden in JavaScript aufruft und Rückgabewerte behandelt und verarbeitet, zum anderen wie man
 Vollbild Anwendungen per WASM im Web verwenden kann.
+
+In der `main` Methode des Filtermoduls werden 4 Funktionen im Dom gesetzt. Dies passiert mithilfe des
+`js` Structs das mit `syscall/js` importiert werden kann. Dann kann mittels `js.Global()` auf das `global`
+Objekt (i.d.R. `window` oder `global`) zugegriffen werden und dann mit `Set()` eine JavaScript Property
+gesetzt werden. Also wird mit `js.Global().Set("applySobel", js.FuncOf(applySobel))` die JavaScript Property
+`applySobel` auf eine Go-Funktion gesetzt, die mit `js.FuncOf()` zu einer Methode gemacht wird, die von
+JavaScript aufgerufen werden kann. 
+
+`FuncOf()` erwartet methoden die die Parameter `this js.Value, args []js.Value`
+erwartet. `this` ist dann das `this` aus JS und `args` sind die Argumente mit der die gewrappte methode in JS
+aufgerufen wurde. Ein `js.Value` kann dann mit Methoden wie `Float()` oder `Int()` zu einem Typen gecastet
+werden um dann in Go weiter verwendet zu werden.
